@@ -1,0 +1,6 @@
+{% extends 'musicshop/base.html' %}
+{% load musicshop_tags %}
+
+{% block content %}
+    {% table_catalog table_items=catalog_items cart=cart sort_order=sort_order table_type="catalog"%}
+{% endblock %}

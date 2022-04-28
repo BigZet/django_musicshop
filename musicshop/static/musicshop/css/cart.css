@@ -1,0 +1,24 @@
+
+/* cart page */
+.cart-page{
+    background-color: var(--color8);
+}
+
+.cart-table-handler{
+    background-color:var(--color8);
+
+}
+
+.table-container{
+    max-height: 250px;
+    table-layout: fixed;
+    word-wrap: break-word;
+}
+
+.order-form{
+    padding: 2% 0%;
+}
+
+p.price_cart{
+    margin: 2%;
+}

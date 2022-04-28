@@ -1,0 +1,49 @@
+/* CATALOG */
+
+.main-nav-block{
+    background-color:var(--color6);
+}
+
+.sort-navbar{
+    background-color:var(--color7);
+}
+
+.search-btn{
+    border: 1px solid #11525f;
+}
+
+.search-box{
+    min-width: 20%;
+}
+
+
+.main-items-block{
+    background-color:var(--color8);
+    max-height: 468px;
+    table-layout: fixed;
+    word-wrap: break-word;
+}
+
+
+
+.table-head{
+    position: -webkit-sticky;
+    position: sticky;
+    top: -4px;
+    z-index: 2;
+    background-color:var(--color8);
+}
+
+.quite-no-margin{
+    margin: 0;
+    margin-top: 0px;
+}
+
+.additional-btn button{
+    margin: 0;
+    padding: 1;
+}
+
+.main-add-del{
+    margin: 1% 0%;
+}

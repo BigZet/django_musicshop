@@ -1,0 +1,17 @@
+{% load musicshop_tags %}
+<div class="position-relative">
+    <a href = "{% url 'cart' %}" class="cart row d-flex align-items-center position-absolute end-0 bottom-100 ">
+        <div class="cart-label col">
+            <div class="icon_cart"></div>
+        </div>
+        <div class="col">
+            <label class="row text-nowrap d-flex align-items-center text-center">
+
+                {{ num_items }} {{ num_items|get_correct_items_word }}
+            </label>
+            <label class="row text-nowrap d-flex align-items-center text-center">
+                {{ cost }} руб.
+            </label>
+        </div>
+    </a>
+</div>

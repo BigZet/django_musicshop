@@ -1,0 +1,102 @@
+{% extends 'musicshop/base.html' %}
+{% load musicshop_tags %}
+{% load admin_urls %}
+
+{% block content %}
+    <div class="item-page">
+      <div class="item-label container-fluid">
+        <div class="row">
+          <div class="col">
+            <label class = "fs-3">{{ item.name }} </label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <label class = "fs-5 vendor-label">{{ item.vendor }} (арт. {{ item.vendor_code }})</label>
+          </div>
+          <div class="col align-self-end">
+
+
+
+          </div>
+
+
+
+        </div>
+      </div>
+      <div class="item-handler d-flex">
+        <div class="item-carous-container">
+          <div id="carouselExampleIndicators" class="carousel slide border-black" data-bs-ride="carousel">
+            <div class="carousel-indicators">
+              <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+              <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+              <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            </div>
+            <div class="carousel-inner shadow">
+
+                {% for image in item.getImages %}
+                    {% if forloop.first %}
+                        <div class="carousel-item active">
+                            <img src="{{ image.image.url }}" class="carousel-img d-block w-100" alt="...">
+                        </div>
+                    {% else %}
+                        <div class="carousel-item">
+                            <img src="{{ image.image.url }}" class="carousel-img d-block w-100" alt="...">
+                        </div>
+                    {% endif %}
+
+                {% endfor %}
+
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon visually-hidden" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+              <span class="carousel-control-next-icon visually-hidden" aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+          </div>
+          <div class="container">
+
+            <div class="price-container">
+              <div class="row">
+                <div class="container">
+                  <p class = "price fs-4">Цена: {{ item.price }} руб.</p>
+                </div>
+              </div>
+
+              <div class="row align-items-end">
+                <div class="col-sm">
+                  <div class="item-btn-grp d-grid gap-2 d-md-flex justify-content-md-end">
+                      <form method="post">
+                          {% csrf_token %}
+                          <button type="submit" name="add_item" class="btn btn-secondary me-md-1 btn-sm" value="{{ item.id }}">Добавить в корзину</button>
+                          <button class="btn btn-secondary me-md-1 btn-sm" type="submit" name="del_item" value="{{ item.id }}">Удалить из корзины</button>
+                      </form>
+
+                    <a class="btn btn-secondary btn-sm" href={% url 'admin:musicshop_catalog_change' item.id %}>Открыть в системе управления</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+          </div>
+
+        </div>
+        <div class="item-descr">
+
+          <p>Описание товара:</p>
+          <div style="white-space: pre-wrap">{{ item.description }}</div>
+            <br>
+            <p>В наличии: {% getGoodQuantity good=item storage_type="all" %} шт.</p>
+            <p>На складе: {% getGoodQuantity good=item storage_type="warehouse" %} шт.</p>
+            <p>В зале: {% getGoodQuantity good=item storage_type="showcase" %} шт.</p>
+
+
+
+        </div>
+      </div>
+    </div>
+{% endblock %}

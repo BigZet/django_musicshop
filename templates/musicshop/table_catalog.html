@@ -1,0 +1,117 @@
+{% load musicshop_tags %}
+<script type="text/javascript" >
+    function toggle(source,name) {
+        checkboxes = document.getElementsByName(name);
+        for (var i = 0,
+            n = checkboxes.length; i < n; i++) {
+            checkboxes[i].checked = source.checked;
+        }
+    }
+</script>
+
+<form method=POST>
+{% csrf_token %}
+    <div class="main-nav-block">
+    <nav class="sort-navbar navbar navbar-expand-lg navbar-light ">
+        <div class="container-fluid">
+            <span class="navbar-text">
+                Сортировка:
+              </span>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  цене
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <li><a class="dropdown-item" href="?sort=cost_up">по возрастанию</a></li>
+                  <li><a class="dropdown-item" href="?sort=cost_down">по убыванию</a></li>
+                </ul>
+              </li>
+
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  новизне
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <li><a class="dropdown-item" href="?sort=date_up">по возрастанию</a></li>
+                  <li><a class="dropdown-item" href="?sort=date_down">по убыванию</a></li>
+                </ul>
+              </li>
+
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  наименованию
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <li><a class="dropdown-item" href="?sort=name_up">по возрастанию</a></li>
+                  <li><a class="dropdown-item" href="?sort=name_down">по убыванию</a></li>
+                </ul>
+              </li>
+            </ul>
+
+            <div class="pad-side-2p">
+                <input type="submit" name="add_selected" value="Добавить отмеченные" class="btn btn-outline-secondary">
+                <input type="submit" name="del_selected" value="Удалить отмеченные" class="btn btn-outline-secondary">
+            </div>
+
+            <div class="d-flex">
+              <input class="form-control me-2 search-box" type="text" name ="search_field" placeholder="Наименование товара" aria-label="Search">
+              <input class="btn btn-outline-secondary search-btn" type="submit" name="search" value="Поиск">
+            </div>
+          </div>
+        </div>
+    </nav>
+</div>
+    <div class="main-items-block shadow overflow-auto">
+    <table class="table table-striped table-hover text-center">
+    <thead>
+        <tr class = "table-head">
+        <th scope="col" ><input type="checkbox" onClick="toggle(this, 'cbx_slave')"/></th>
+        <th scope="col">Артикул</th>
+        <th scope="col">Производитель</th>
+        <th scope="col">Наименование</th>
+        <th scope="col">Цена</th>
+        <th scope="col">Остаток</th>
+        <th scope="col">Гарантия</th>
+        <th scope="col">В корзине</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for item in table_items %}
+        <tr>
+            <td><input type="checkbox" name="cbx_slave" value={{ item.pk }}></td>
+            <th scope="row">{{ item.vendor_code|upper }}</th>
+            <td>{{ item.vendor|upper }}</td>
+            <td>{{ item.name|upper }}</td>
+            <td>{{ item.price }} руб.</td>
+            <td>{% getGoodQuantity good=item storage_type="all" %} шт.</td>
+            <td>{{ item.get_warranty_display }}</td>
+            <td>{{ cart|give_from_cart:item.id }} шт.</td>
+            <td>
+                <form method=POST>
+                    {% csrf_token %}
+                    <div class="btn-group d-flex gap-2" role="group" aria-label="Basic example">
+                        <button type="submit" name="add_item" class="btn btn-outline-secondary btn-sm" value="{{ item.id }}">Добавить</button>
+                        <button type="submit" name="del_item" class="btn btn-outline-secondary btn-sm" value="{{ item.id }}">Удалить</button>
+
+                        <a href="{{item.get_absolute_url}}" class="btn btn-outline-secondary btn-sm">Подробнее</a>
+                    </div>
+                </form>
+            </td>
+        </tr>
+    {% endfor %}
+
+
+    </tbody>
+</table>
+</div>
+</form>
+
+
+

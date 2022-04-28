@@ -1,0 +1,65 @@
+{% load static %}
+{% load musicshop_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href={% static 'musicshop/css/bootstrap.min.css' %}>
+    <link rel="stylesheet" href={% static 'musicshop/font/logo-font/stylesheet.css' %}>
+    <link rel="stylesheet" href={% static 'musicshop/css/base.css' %}>
+    <link rel="stylesheet" href={% static 'musicshop/css/login.css' %}>
+    <title>{{ title }}</title>
+</head>
+<body>
+<script src={% static 'musicshop/js/bootstrap.bundle.min.js' %}></script>
+<header>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="head_logo ">
+                    <div class="logo fs-2 text-center">
+                        Strings of the Soul
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</header>
+
+<section>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="shadow bg-gradient col-md-3 mx-auto">
+                    <div class="w-100 p-4 d-flex justify-content-center pb-4">
+                        <form method="post" style="width: 13rem">
+                            {% csrf_token %}
+                            <!-- Email input -->
+                            <div class="form-outline mb-4">
+                                <label class="form-label" for={{ form.username.id_for_label }}>Имя пользователя</label>
+                                {{ form.username }}
+                            </div>
+
+                            <!-- Password input -->
+                            <div class="form-outline mb-4">
+                                <label class="form-label" for={{ form.password.id_for_label }}>Пароль</label>
+                                {{ form.password }}
+                            </div>
+                            <button type="button" class="btn btn-success mb-auto w-100 shadow-sm">Войти</button>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer id = "footer">
+</footer>
+
+</body>
+</html>

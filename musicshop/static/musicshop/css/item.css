@@ -1,0 +1,66 @@
+.item-page{
+    background-color: var(--color8);
+    padding-bottom: 2%;
+}
+
+.item-label{
+    text-align: left;
+    padding: 1%;
+    padding-left: 5%;
+    padding-top: 2%;
+}
+
+.vendor-label{
+    color: gray;
+}
+
+.item-carous-container{
+    align-self: start;
+    width: 60%;
+    margin: 1%;
+    margin-top: 0;
+}
+
+
+.item-descr{
+    width: 35%;
+    padding-left: 1%;
+}
+
+.personal-info-table{
+    margin-top: 2%;
+}
+
+.price{
+    text-align: end;
+    margin-bottom: 2%;
+}
+
+.price-container{
+    width:max-content;
+    height:min-content;
+    margin-right: 0;
+    margin-left: auto;
+}
+
+.item-subinfo{
+    padding-left: 2%;
+}
+
+.item-btn-grp button{
+    font-size: 14px;
+}
+
+.carousel{
+    margin: 0 5% 5%;
+}
+
+.carousel-inner{
+    border-radius: 25px;
+}
+
+.carousel-img{
+    max-height: 350px;
+    object-fit: cover;
+    border-radius: 25px;
+}
