@@ -1,4 +1,6 @@
 from django import template
+
+from musicshop.forms import CreateUserForm
 from musicshop.models import *
 
 register = template.Library()
@@ -13,6 +15,9 @@ def getGoodQuantity(good, storage_type):
         return 0
     else:
         return good.countAll()[storage_type]
+@register.simple_tag()
+def isGoodQuantityNull(good, storage_type):
+    return getGoodQuantity(good, storage_type) != 0
 
 
 @register.inclusion_tag('musicshop/list_categories.html')
@@ -45,22 +50,15 @@ def table_catalog(table_items, cart ="", sort_order='cost_up', table_type="catal
 
 @register.inclusion_tag('musicshop/container_cart.html')
 def container_cart(num_items, cost):
-    # { % if num_items_mod10 == 1 %}
-    # {{num_items}}
-    # товар
-
-
-# { % elif num_items_mod10 > 4 or num_items_mod10 == 0 %}
-# {{num_items}}
-# товаров
-# { % else %}
-# {{num_items}}
-# товара
-# { % endif %}
     return{
         'num_items':num_items,
         'cost':cost
     }
+
+@register.inclusion_tag('musicshop/order_form.html')
+def order_form(form, create_user_form):
+    return{'form':form,
+           'create_user_form':create_user_form}
 
 @register.filter(name = "get_correct_items_word")
 def get_correct_items_word(num_items):

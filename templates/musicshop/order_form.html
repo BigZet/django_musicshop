@@ -1,25 +1,89 @@
 {% load musicshop_tags %}
+{% load widget_tweaks %}
 <form class="order-form" method="post">
+    {% csrf_token %}
     <div class="mb-3">
-        <label for="exampleInputEmail1" class="form-label">Выбор клиента</label>
-        <select class="form-select" aria-label="Default select example">
-          <option selected>Open this select menu</option>
-          <option value="1">One</option>
-          <option value="2">Two</option>
-          <option value="3">Three</option>
-        </select>
-        <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+        {% for hidden_field in form.hidden_fields %}
+            {{ hidden_field }}
+        {% endfor %}
     </div>
     <div class="mb-3">
-        <label for="exampleInputPassword1" class="form-label">Password</label>
-        <input type="password" class="form-control" id="exampleInputPassword1">
+        {{ form.buyer.errors }}
+        <label for="chooseClient" class="form-label">Выбор покупателя:</label>
+        {{ form.buyer }}
+        <div id="chooseClientHelp" class="form-text">Если отсутсвует покупатель в базе, <a data-bs-toggle="offcanvas" href="#offcanvasAddClient" role="button"><b>нажмите сюда</b></a>  для добавления.</div>
+    </div>
+    <div class="mb-3">
+        {{ form.staff.errors }}
+        <label for="chooseStaff" class="form-label">Выбор соотрудника:</label>
+        {{ form.staff }}
+    </div>
+    <div class="mb-3">
+        {{ form.payment_type.errors }}
+        <label for="paymentType" class="form-label">Тип оплаты:</label>
+        {{ form.payment_type }}
+    </div>
+    <div class="mb-3">
+        <div class="form-floating">
+            {{ form.subinfo.errors }}
+            {% render_field form.subinfo class="form-control" placeholder="Поле можно оставить пустым" id="subInfo" style="height: 100px" %}
+            <label for="subInfo">Дополнительная информация о заказе</label>
+        </div>
     </div>
     <div class="mb-3 form-check">
-        <input type="checkbox" class="form-check-input" id="exampleCheck1">
-        <label class="form-check-label" for="exampleCheck1">Check me out</label>
+        {{ form.cbx_add_storage_items_first.errors }}
+        {{ form.cbx_add_storage_items_first }}
+        <label class="form-check-label" for="cbx_first_storage">Добавлять сначала товары со склада</label>
     </div>
-    <button type="submit" class="btn btn-primary">Оформить</button>
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-        Создать профиль
-    </button>
+    <button type="submit" class="btn btn-primary" name = "create_order" value="on">Оформить заказ</button>
 </form>
+
+
+<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasAddClient" aria-labelledby="offcanvasExampleLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasExampleLabel">Регистрация нового покупателя</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <form class="client-form" method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                {% for hidden_field in form.hidden_fields %}
+                    {{ hidden_field }}
+                {% endfor %}
+            </div>
+            <div class="form-floating mb-3">
+                {{ create_user_form.first_name.errors }}
+                {{ create_user_form.first_name }}
+                <label for="{{ create_user_form.first_name.id_for_label }}">Имя</label>
+            </div>
+            <div class="form-floating mb-3">
+                {{ create_user_form.last_name }}
+                <label for="{{ create_user_form.last_name.id_for_label }}">Фамилия</label>
+            </div>
+            <div class="form-floating mb-3">
+                {{ create_user_form.phone }}
+                <label for="{{create_user_form.phone.id_for_label }}">Телефон</label>
+            </div>
+            <div class="form-floating mb-3">
+                {{ create_user_form.email }}
+                <label for="{{ create_user_form.email.id_for_label }}">Эл.почта</label>
+            </div>
+            <div class="form-floating mb-3">
+                {{ create_user_form.address }}
+                <label for="{{ create_user_form.address.id_for_label }}">Адрес</label>
+            </div>
+            <div class="form-floating mb-3">
+                {{ create_user_form.gender }}
+                <label for="{{ create_user_form.gender.id_for_label }}" class="form-label">Пол:</label>
+            </div>
+            <div class="mb-3">
+                <div class="form-floating mb-3">
+                    {{ create_user_form.description }}
+                    <label for="{{ create_user_form.description.id_for_label }}">Дополнительная информация </label>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary" name = "create_user" value="on">Зарегистрировать покупателя</button>
+        </form>
+    </div>
+</div>

@@ -30,33 +30,13 @@
                 </h2>
                 <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingTwo">
                     <div class="accordion-body">
-                        <form class="order-form" method="post">
-                            <div class="mb-3">
-                                <label for="chooseClient" class="form-label">Выбор покупателя:</label>
-                                <select class="form-select" aria-label="Default select example" id = "chooseClient">
-                                    <option selected>Выберите покупателя из списка (возможен поиск)</option>
-                                    <option value="1">Дмитрий</option>
-                                    <option value="2">Петр</option>
-                                    <option value="3">Стас</option>
-                                </select>
-                                <div id="chooseClientHelp" class="form-text">Тут будет ссылка на создание нового клиента</div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="exampleInputPassword1" class="form-label">Password</label>
-                                <input type="password" class="form-control" id="exampleInputPassword1">
-                            </div>
-                            <div class="mb-3 form-check">
-                                <input type="checkbox" class="form-check-input" id="cbx_first_storage">
-                                <label class="form-check-label" for="cbx_first_storage">Добавлять сначала товары со склада</label>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Оформить заказ</button>
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                Создать профиль
-                            </button>
-                        </form>
+                        {% order_form orderForm createUserForm %}
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+
 {% endblock %}

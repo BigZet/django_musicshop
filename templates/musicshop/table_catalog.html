@@ -84,6 +84,8 @@
     </thead>
     <tbody>
     {% for item in table_items %}
+        {% isGoodQuantityNull good=item storage_type="all" as rowCheck %}
+        {% if rowCheck %}
         <tr>
             <td><input type="checkbox" name="cbx_slave" value={{ item.pk }}></td>
             <th scope="row">{{ item.vendor_code|upper }}</th>
@@ -105,6 +107,7 @@
                 </form>
             </td>
         </tr>
+        {% endif %}
     {% endfor %}
 
 

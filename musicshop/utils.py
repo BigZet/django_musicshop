@@ -6,10 +6,6 @@ from .models import *
 import warnings
 
 
-# Тут будут Миксины, но пока не нужны
-
-
-
 
 class CartMixin:
     def add_to_cart(self, items):
@@ -26,76 +22,15 @@ class CartMixin:
 
 
 
-
-
-# class Item():
-#
-#         def __init__(self, id, quantity):
-#             self.id = id
-#             self.item = Catalog.objects.get(id=self.id)
-#             self.quantity = quantity
-#
-#             if(self.quantity > self.item.countAll()['all']):
-#                 print(f"ПРЕВЫШЕНИЕ ЗАКАЗА (поймано в INIT) {self.id}, {self.item}")
-#                 self.quantity = self.item.countAll()['all']
-#
-#             self.reCalcStorageShowcase()
-#
-#         def reCalcStorageShowcase(self):
-#             self.quantity_storage = 0 if self.item.countAll()['showcase'] > self.quantity else self.quantity - \
-#                                                                                                self.item.countAll()[
-#                                                                                                    'showcase']
-#             self.quantity_showcase = self.quantity - self.quantity_storage
-#
-#         def add(self, quantity):
-#             if(self.quantity + quantity > self.item.countAll()['all']):
-#                 print(f"ПРЕВЫШЕНИЕ ЗАКАЗА (поймано в add) {self.id}, {self.item}")
-#                 self.quantity = self.item.countAll()['all']
-#             else:
-#                 self.quantity+=quantity
-#
-#             self.reCalcStorageShowcase()
-#
-#
-#
-#         def remove(self, quantity):
-#             if self.quantity-quantity<0:
-#                 warnings.warn("Warning! Trying to remove_quantity is greater than item self.quantity. I set self.quantity to 0")
-#                 self.quantity = 0
-#             else:
-#                 self.quantity -= quantity
-#
-#             self.reCalcStorageShowcase()
-#
-#
-#         def __str__(self):
-#             return f"{self.id}, {self.item}, {self.quantity}, {self.quantity_storage}, {self.quantity_showcase}"
-#
-#         def getQuantity(self):
-#             return self.quantity
-#
-#         def getQuantityStorage(self):
-#             return self.quantity_storage
-#
-#         def getQuantityShowcase(self):
-#             return self.quantity_showcase
-#
-#         def getId(self):
-#             return self.id
-#
-#         def getItem(self):
-#             return self.item
-
-
-
 class CartManagerMixin:
 
-    # def pack(self, item):
-    #     return item.getQuantity()
-    #
-    # def unpack(self, id, quantity):
-    #     return Item(id, quantity)
-    cart_dict= {}
+    def __init__(self):
+        self.cart_dict = {}
+
+
+    def load_cart(self):
+        self.cart_dict = self.request.session.get('cart_dict', {})
+
 
     def update_cart(self):
         for i in list(self.cart_dict.keys()):
@@ -107,6 +42,8 @@ class CartManagerMixin:
         else:
             self.request.session['cart_dict'].update(self.cart_dict)
         self.request.session.modified = True
+        print(self.request.session['cart_dict'])
+        print(self.cart_dict)
 
     def add_one(self, id, quantity):
         if not self.cart_dict.get(id):
@@ -147,8 +84,9 @@ class CartManagerMixin:
         self.remove_dict(id_dict)
 
     def remove_list_all(self, ids):
-        id_dict = {i:self.cart_dict[i] for i in ids}
+        id_dict = {i:self.cart_dict.get(i, 0) for i in ids}
         self.remove_dict(id_dict)
+
 
     def show_cart(self):
         print(self.cart_dict)
@@ -169,6 +107,7 @@ class CartManagerMixin:
 
     def getIds(self):
         return self.cart_dict.keys()
+
 
     def post(self, request, *args, **kwargs):
         if request.POST.get('add_selected'):

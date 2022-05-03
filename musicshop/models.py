@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
+from django.db.models import UniqueConstraint
+from django.db.models.functions import Lower
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
 from django_extensions.db.fields import AutoSlugField
@@ -59,12 +61,12 @@ class PLACE (models.IntegerChoices):
 class Client(models.Model):
     first_name = models.CharField(max_length=255, verbose_name="Имя")
     last_name = models.CharField(max_length=255, verbose_name="Фамилия")
-    birth_date = models.DateField(verbose_name="Дата рождения")
+    birth_date = models.DateField(blank = True, null = True, verbose_name="Дата рождения")
     phone = models.CharField(max_length=255, blank = True, null = True, verbose_name="Моб. телефон")
     email = models.EmailField(verbose_name="Эл. почта")
     address = models.CharField(max_length=255, blank = True, null = True, verbose_name="Адрес")
     discount = models.IntegerField(choices=DISCOUNT.choices, default=DISCOUNT.EMPTY, verbose_name="Тип скидки")
-    gender = models.IntegerField(choices=GENDER.choices, blank = True, null=True, verbose_name="Пол")
+    gender = models.IntegerField(choices=GENDER.choices, default=GENDER.EMPTY, verbose_name="Пол")
     job = models.CharField(max_length=255, blank = True, null = True, verbose_name="Работа/Специальность")
     description = models.TextField(blank=True, null = True, verbose_name="Описание")
     add_date = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
@@ -82,6 +84,9 @@ class Client(models.Model):
         verbose_name = "Клиент"
         verbose_name_plural = "Клиенты"
         ordering = ['upd_date']
+        constraints = [
+            UniqueConstraint(Lower('first_name'), Lower('last_name'), name='unique_lower_first_and_last_name')
+        ]
 
 class Staff(models.Model):
     first_name = models.CharField(max_length=255, verbose_name="Имя")
@@ -197,6 +202,7 @@ class Order(models.Model):
     upd_time = models.DateTimeField(auto_now=True, verbose_name="Время изменения")
     status = models.IntegerField(choices=ORDER_STATUS.choices, default=ORDER_STATUS.INIT, verbose_name="Статус")
     payment_type = models.IntegerField(choices=PAYMENT_TYPE.choices, default=PAYMENT_TYPE.CASH, verbose_name="Тип оплаты")
+    subinfo = models.TextField(null = True, blank = True, verbose_name="Дополнительная информация")
 
     def __str__(self):
         return f"{self.buyer} {self.add_time} "
@@ -241,6 +247,14 @@ class OrderGoods(models.Model):
 
     def __str__(self):
         return f"{self.order} {self.good} {self.quantity}"
+
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.good.quantity -= self.quantity
+        self.good.save()
+        print(self.good.quantity)
+        print('HII')
 
     class Meta:
         verbose_name = "Заказ/Товары"
