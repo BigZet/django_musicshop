@@ -35,7 +35,7 @@
             <div class="container-fluid">
                 <ul class="nav nav-pills nav-fill justify-content-center  shadow">
                     <li class="nav-item menu-item">
-                        <a class="nav-link active" href="#">Главная</a>
+                        <a class="nav-link active" href={% url 'index' %}>Главная</a>
                     </li>
                     <li class="nav-item dropdown menu-item">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -47,13 +47,10 @@
                     </li>
 
                     <li class="nav-item menu-item">
-                        <a class="nav-link" href="#">О системе</a>
-                    </li>
-                    <li class="nav-item menu-item">
                         <a class="nav-link" href="/admin">Admin-панель</a>
                     </li>
                     <li class="nav-item menu-item">
-                        <a class="nav-link" href="#">Выход из системы</a>
+                        <a class="nav-link" href={% url 'exit' %}>{{ user }} / Выход из системы</a>
                     </li>
                 </ul>
             </div>

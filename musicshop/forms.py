@@ -85,8 +85,9 @@ class OrderForm(forms.ModelForm):
             ),
             'staff': forms.Select(
                 attrs={
-                    'class': "form-select",
-                    'id': "chooseStaff"
+                    'class': "form-select disable",
+                    'id': "chooseStaff",
+                    'disabled': False
                 }
             ),
             'payment_type': forms.Select(
@@ -103,6 +104,7 @@ class OrderForm(forms.ModelForm):
         'class' :"form-check-input",
         'id':"cbx_first_storage"
     }))
+
 
     def save(self, cart = {}, commit=True):
         items_to_add = []

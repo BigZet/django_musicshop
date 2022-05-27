@@ -123,3 +123,9 @@ footer{
 .nav-pills .nav-link.active, .nav-pills > .nav-link{
     background-color: #10768d;
 }
+
+.disable {
+  background: #eee; /*Simular campo inativo - Sugestão @GabrielRodrigues*/
+  pointer-events: none;
+  touch-action: none;
+}

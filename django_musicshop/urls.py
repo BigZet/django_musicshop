@@ -17,18 +17,19 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
-
+from django.contrib.auth import views as authViews
 from musicshop.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls, name = "admin"),
-    path('', CatalogPage.as_view(), name = "index"),
+    path('', MainPage.as_view(), name = "index"),
     path('catalog/category/<slug:category_slug>', CatalogPage.as_view(), name = 'catalog'),
     path('catalog/category/', CatalogPage.as_view(), name = 'catalog_category_empty'),
     path('catalog/', CatalogPage.as_view(), name = 'catalog_empty'),
     path('cart/', CartPage.as_view(), name = 'cart'),
     path('catalog/category/<slug:category_slug>/<slug:item_slug>', ItemPage.as_view(), name='item_about'),
-    path('login/', LoginUser.as_view(), name = "login")
+    path('login/', LoginUser.as_view(), name = "login"),
+    path('exit/', authViews.LogoutView.as_view(next_page='index'), name='exit'),
 ]
 
 if settings.DEBUG:

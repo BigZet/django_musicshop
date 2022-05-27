@@ -7,6 +7,7 @@ import warnings
 
 
 
+
 class CartMixin:
     def add_to_cart(self, items):
         if not self.request.session.get('cart_ids', False):

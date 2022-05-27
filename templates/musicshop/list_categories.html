@@ -6,4 +6,6 @@
             <li><a class="dropdown-item" href="{{category.get_absolute_url}}">{{ category.name}}</a></li>
         {% endif %}
     {% endfor %}
+    <div class="dropdown-divider"></div>
+    <li><a class="dropdown-item" href={% url 'catalog_empty' %}>Все товары</a></li>
 </ul>

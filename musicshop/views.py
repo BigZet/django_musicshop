@@ -60,6 +60,7 @@ class CatalogPage(LoginRequiredMixin, CartManagerMixin, ListView):
         context['cart'] = self.cart_dict
         context['num_items'] = self.calc_items_in_cart()
         context['cost'] = self.calc_total_cost()
+        context['user'] = Staff.objects.get(auth_container=self.request.user)
         return context
 
     def get_queryset(self):
@@ -100,6 +101,7 @@ class ItemPage(LoginRequiredMixin, CartManagerMixin, DetailView):
         context['category_slug'] = self.category_slug
         context['num_items'] = self.calc_items_in_cart()
         context['cost'] = self.calc_total_cost()
+        context['user'] = Staff.objects.get(auth_container=self.request.user)
         return context
 
 class CartPage(LoginRequiredMixin, CartManagerMixin, TemplateView):
@@ -112,7 +114,6 @@ class CartPage(LoginRequiredMixin, CartManagerMixin, TemplateView):
 
     def get(self, request, *args, **kwargs):
         self.load_cart()
-        print(request.session['cart_dict'])
         print('session')
         if self.request.GET:
             print(f"GET: {request.GET}")
@@ -127,6 +128,7 @@ class CartPage(LoginRequiredMixin, CartManagerMixin, TemplateView):
             self.search_query = request.POST.get('search_field', "")
 
         if (request.POST.get('create_order')):
+
             self.order_form = OrderForm(request.POST)
             if self.order_form.is_valid():
                 print("VALID ORDER_FORM")
@@ -137,22 +139,19 @@ class CartPage(LoginRequiredMixin, CartManagerMixin, TemplateView):
                     try:
                         answer = self.order_form.save(self.cart_dict)
                         if answer:
-                            print("HIIIIIIIIIIIII")
                             self.cart_dict = {}
                             request.session['cart_dict'] = {}
                             request.session.modified = True
-                            self.order_form = OrderForm()
-                            return redirect('index')
+                            return redirect('catalog_empty')
                     except Exception as e:
                         messages.info(request, "Системная ошибка. Заказ не был добавлен. Свяжитесь с администратором")
                         print(e)
-
             else:
                 print("INVALID ORDER_FORM")
                 print(self.order_form.cleaned_data)
                 messages.info(request, "Отмена добавления заказа. Проверьте корректность заполнения полей")
-                print(self.order_form.errors)
 
+                print(self.order_form.errors)
 
 
         if (request.POST.get('create_user')):
@@ -179,7 +178,7 @@ class CartPage(LoginRequiredMixin, CartManagerMixin, TemplateView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-
+        self.order_form = OrderForm(initial={'staff': Staff.objects.get(auth_container=self.request.user)})
         objects = Catalog.objects.filter(pk__in = self.getIds())
         if(self.search_query):
             objects = objects.annotate(
@@ -194,6 +193,7 @@ class CartPage(LoginRequiredMixin, CartManagerMixin, TemplateView):
         context['cost'] = self.calc_total_cost()
         context['orderForm'] = self.order_form
         context['createUserForm'] = self.user_form
+        context['user'] = Staff.objects.get(auth_container=self.request.user)
         return context
 
 
@@ -215,15 +215,17 @@ class LoginUser(LoginView):
 
 
 
-def cart_test(request):
-    sort_order = ''
-    if request.GET:
-        if request.GET['sort']:
-            sort_order = request.GET['sort']
-    return render(request, 'musicshop/cart.html',
-                  {
-                      'title': 'catalog_without',
-                      'show_cart': False,
-                      'selected_category':2,
-                      'sort_order': sort_order
-                  })
+class MainPage(LoginRequiredMixin, CartManagerMixin, TemplateView):
+    template_name = "musicshop/main_page.html"
+    login_url = reverse_lazy('login')
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['title'] = 'index'
+        context['show_cart'] = False
+        context['cart'] = self.cart_dict
+        context['num_items'] = self.calc_items_in_cart()
+        context['cost'] = self.calc_total_cost()
+        context['user'] = Staff.objects.get(auth_container=self.request.user)
+        return context

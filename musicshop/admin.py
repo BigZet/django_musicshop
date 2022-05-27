@@ -45,7 +45,7 @@ class OrderItemsAdmin(admin.TabularInline):
 class OrderAdmin(admin.ModelAdmin):
     list_display = ('upd_time',  'buyer', 'status', 'staff',  'payment_type', )
     search_fields = ('buyer', 'staff',)
-    list_filter = ('status', 'payment_type', )
+    list_filter = ('status', 'payment_type', 'staff',)
     inlines = [OrderItemsAdmin]
 
 class CatalogImageAdmin(admin.StackedInline):
